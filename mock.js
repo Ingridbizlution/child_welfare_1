@@ -64,33 +64,9 @@ window.MOCK_DATA = {
   // ── 園區導覽 (樓層地圖資訊) ──────────────────────────────────
   guide: {
     floors: [
-      {
-        floor: "1F",
-        areas: [
-          { name: "大廳接待", icon: "🏛" },
-          { name: "兒童遊戲區", icon: "🧸" },
-          { name: "哺乳室", icon: "🍼" },
-          { name: "無障礙廁所", icon: "♿" }
-        ]
-      },
-      {
-        floor: "2F",
-        areas: [
-          { name: "親子閱讀區", icon: "📚" },
-          { name: "多功能教室A", icon: "🏫" },
-          { name: "多功能教室B", icon: "🏫" },
-          { name: "行政辦公室", icon: "💼" }
-        ]
-      },
-      {
-        floor: "3F",
-        areas: [
-          { name: "室內活動場", icon: "🎪" },
-          { name: "視聽教室", icon: "🎬" },
-          { name: "會議室", icon: "📋" },
-          { name: "屋頂花園", icon: "🌿" }
-        ]
-      }
+      { floor: "1F" },
+      { floor: "2F" },
+      { floor: "3F" }
     ]
   }
 };

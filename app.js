@@ -195,9 +195,8 @@
   var currentFloor = 0; // 預設 1F
 
   function renderGuide(floorIndex) {
-    var tabsEl   = document.getElementById('floor-tabs');
-    var detailEl = document.getElementById('floor-detail');
-    if (!tabsEl || !detailEl) return;
+    var tabsEl = document.getElementById('floor-tabs');
+    if (!tabsEl) return;
 
     var floors = window.MOCK_DATA.guide.floors;
 
@@ -214,22 +213,14 @@
     tabsEl.querySelectorAll('.floor-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var idx = parseInt(this.getAttribute('data-floor-index'), 10);
+        if (floors[idx].floor === '1F') {
+          window.location.href = 'floor_plan.html';
+          return;
+        }
         currentFloor = idx;
         renderGuide(idx);
       });
     });
-
-    // 樓層細節
-    var areas = floors[floorIndex].areas;
-    var detailHtml = '';
-    areas.forEach(function (area) {
-      detailHtml +=
-        '<div class="floor-area-item">' +
-          '<span class="area-icon">' + area.icon + '</span>' +
-          '<span>' + area.name + '</span>' +
-        '</div>';
-    });
-    detailEl.innerHTML = detailHtml;
   }
 
   renderGuide(currentFloor);
