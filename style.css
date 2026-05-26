@@ -1,0 +1,570 @@
+/* ═══════════════════════════════════════════════════════════════
+   style.css — 台北兒童福利中心資訊看板
+   設計稿基準尺寸：1080 × 1920 px
+   ─── 支援 1080p (1920×1080 橫置) 與 4K (3840×2160) ───────────
+   以 CSS transform scale 進行等比縮放，不破版
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 字體 fallback (Google Fonts 載入失敗時) ─────────────────── */
+@import url('data:text/css,');
+
+/* ── CSS 變數 ─────────────────────────────────────────────────── */
+:root {
+  /* 顏色 */
+  --c-primary:   #406c76;
+  --c-bg-grad-top:    rgb(226, 213, 210);
+  --c-bg-grad-mid:    rgb(100, 232, 231);
+  --c-bg-grad-bot:    rgb(86, 144, 217);
+  --c-card-bg:        rgba(255,255,255,0.6);
+  --c-card-border:    rgba(255,255,255,0.85);
+  --c-pill-bg:        rgba(255,255,255,0.2);
+  --c-text-main:      #406c76;
+  --c-text-sub:       #6d6d6d;
+  --c-white:          #ffffff;
+  --c-blue-btn:       #3a6abc;
+  --c-grey-btn:       #d3d3d3;
+  --c-grey-btn-text:  #828282;
+  --c-arriving:       #e84c3d;
+  --c-soon:           #f39c12;
+
+  /* 設計稿寬高（保持縱向比例） */
+  --design-w: 1080px;
+  --design-h: 1920px;
+
+  /* 圓角 */
+  --r-card:  30px;
+  --r-pill:  50px;
+  --r-btn:   20px;
+  --r-badge: 5px;
+
+  /* 字體 */
+  --font-zh: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+  --font-en: 'Roboto', 'Noto Sans TC', sans-serif;
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   縮放容器 — JS 計算 scale 後注入 inline style
+   ══════════════════════════════════════════════════════════════ */
+#app-root {
+  /* 固定設計稿尺寸 (縱向) */
+  width:  var(--design-w);
+  height: var(--design-h);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+
+  /* 背景漸層 */
+  background: linear-gradient(
+    179.57deg,
+    var(--c-bg-grad-top)  8.4%,
+    var(--c-bg-grad-mid) 45.7%,
+    var(--c-bg-grad-bot) 99.8%
+  );
+  font-family: var(--font-zh);
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════════ */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  padding: 0 48px;
+  gap: 24px;
+  z-index: 10;
+}
+
+/* Logo */
+.logo-wrap {
+  flex: 0 0 auto;
+}
+
+/* 時鐘 Pill */
+.clock-pill {
+  position: absolute;
+  left: 305px;
+  top: 42px;
+  width: 460px;
+  height: 80px;
+  background: var(--c-pill-bg);
+  border: 2px solid #000;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  gap: 12px;
+}
+
+.clock-icon { display: flex; align-items: center; }
+.clock-ampm { font-family: var(--font-zh); font-size: 24px; font-weight: 400; color: #000; }
+.clock-time { font-family: var(--font-en); font-size: 36px; font-weight: 500; color: #000; letter-spacing: 1px; }
+.clock-sep  { color: #000; font-size: 24px; opacity: .4; }
+.clock-weekday { font-family: var(--font-zh); font-size: 24px; color: #000; }
+.clock-date    { font-family: var(--font-en); font-size: 36px; font-weight: 500; color: #000; }
+
+/* 天氣 Pill */
+.weather-pill {
+  position: absolute;
+  left: 797px;
+  top: 42px;
+  width: 240px;
+  height: 80px;
+  background: var(--c-pill-bg);
+  border: 2px solid #000;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 10px;
+}
+
+.weather-icon { display: flex; align-items: center; flex: 0 0 auto; }
+.weather-info { display: flex; flex-direction: column; gap: 2px; }
+.weather-condition {
+  font-family: var(--font-zh);
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  white-space: nowrap;
+}
+.weather-temp {
+  font-family: var(--font-en);
+  font-size: 28px;
+  font-weight: 500;
+  color: #000;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO 建築圖
+   ══════════════════════════════════════════════════════════════ */
+.hero-section {
+  position: absolute;
+  top: 140px;
+  left: 0;
+  width: 1080px;
+  height: 580px;
+  overflow: hidden;
+}
+
+.hero-image-wrap {
+  width: 100%;
+  height: 540px;
+  overflow: hidden;
+}
+
+.hero-city-art {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-city-art svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 輪播點 */
+.carousel-dots {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(64,108,118,0.35);
+  transition: background .3s;
+}
+
+.dot.active {
+  background: var(--c-primary);
+  width: 12px;
+  height: 12px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARDS 區域
+   ══════════════════════════════════════════════════════════════ */
+.cards-area {
+  position: absolute;
+  top: 830px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 48px 48px;
+}
+
+/* ── 通用卡片 ────────────────────────────────────────────────── */
+.card {
+  flex: 1;
+  background: var(--c-card-bg);
+  border: 1.5px solid var(--c-card-border);
+  border-radius: var(--r-card);
+  display: flex;
+  align-items: center;
+  padding: 0 28px 0 24px;
+  gap: 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 左側 icon 欄 */
+.card-icon-col {
+  flex: 0 0 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.card-label {
+  font-family: var(--font-zh);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--c-text-main);
+  white-space: nowrap;
+}
+
+/* 右側箭頭 */
+.card-arrow {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: var(--c-primary);
+  opacity: .6;
+  font-family: var(--font-en);
+  line-height: 1;
+}
+
+/* 內容區 */
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+  padding-right: 40px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   環境監測卡
+   ══════════════════════════════════════════════════════════════ */
+.env-content {
+  gap: 0;
+}
+
+.env-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(64,108,118,0.15);
+}
+
+.env-row:last-child { border-bottom: none; }
+
+.env-floor {
+  font-family: var(--font-zh);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--c-text-main);
+  width: 56px;
+  flex-shrink: 0;
+}
+
+.env-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.env-label {
+  font-family: var(--font-zh);
+  font-size: 20px;
+  color: var(--c-text-sub);
+}
+
+.env-sep {
+  font-size: 18px;
+  color: rgba(64,108,118,0.4);
+  margin: 0 2px;
+}
+
+.env-value {
+  font-family: var(--font-en);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--c-text-main);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   公告卡
+   ══════════════════════════════════════════════════════════════ */
+.notice-content {
+  gap: 6px;
+  overflow: hidden;
+}
+
+.notice-item {
+  font-family: var(--font-zh);
+  font-size: 22px;
+  color: var(--c-text-main);
+  line-height: 1.55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 720px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   交通資訊卡
+   ══════════════════════════════════════════════════════════════ */
+.transit-content {
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+.transit-bus-col {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 32px;
+  border-right: 1.5px solid rgba(64,108,118,0.2);
+}
+
+.transit-bus-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bus-route-no {
+  font-family: var(--font-zh);
+  font-size: 28px;
+  color: var(--c-text-main);
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.bus-status {
+  font-family: var(--font-zh);
+  font-size: 20px;
+  padding: 3px 12px;
+  border-radius: var(--r-badge);
+  background: rgba(255,255,255,0.5);
+  white-space: nowrap;
+}
+
+.bus-status.arriving { color: var(--c-arriving); border: 1px solid rgba(232,76,61,.3); }
+.bus-status.soon     { color: var(--c-soon);     border: 1px solid rgba(243,156,18,.3); }
+
+.transit-ubike-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 32px;
+}
+
+.ubike-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.ubike-label {
+  font-family: var(--font-en);
+  font-size: 28px;
+  color: var(--c-text-main);
+  font-weight: 400;
+}
+
+.ubike-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.ubike-station {
+  font-family: var(--font-zh);
+  font-size: 20px;
+  color: var(--c-text-main);
+}
+
+.ubike-count {
+  font-family: var(--font-zh);
+  font-size: 20px;
+  color: var(--c-text-main);
+  padding: 3px 10px;
+  border-radius: var(--r-badge);
+  background: rgba(255,255,255,0.5);
+  white-space: nowrap;
+}
+
+/* Ubike SVG icon inline */
+.ubike-icon svg {
+  width: 36px;
+  height: 28px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   園區導覽卡
+   ══════════════════════════════════════════════════════════════ */
+.guide-content {
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.floor-tabs {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.floor-btn {
+  width: 160px;
+  height: 68px;
+  border-radius: var(--r-btn);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-zh);
+  font-size: 34px;
+  font-weight: 500;
+  transition: background .2s, color .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floor-btn.active {
+  background: var(--c-blue-btn);
+  color: var(--c-white);
+}
+
+.floor-btn:not(.active) {
+  background: var(--c-grey-btn);
+  color: var(--c-grey-btn-text);
+}
+
+.floor-detail {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.floor-area-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-zh);
+  font-size: 20px;
+  color: var(--c-text-main);
+}
+
+.floor-area-item .area-icon {
+  font-size: 22px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   動畫
+   ══════════════════════════════════════════════════════════════ */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeSlideIn .5s ease both;
+}
+
+.env-card    { animation-delay: .1s; }
+.notice-card { animation-delay: .2s; }
+.transit-card{ animation-delay: .3s; }
+.guide-card  { animation-delay: .4s; }
+
+/* 公告滾動 */
+@keyframes scrollNotice {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.notice-ticker-wrap {
+  overflow: hidden;
+  width: 100%;
+}
+
+.notice-ticker {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 交通輪播容器 */
+.transit-roller-wrap {
+  overflow: hidden;
+}
+
+#bus-roller,
+#ubike-roller {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 輪播點動畫 */
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .4; }
+}

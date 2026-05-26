@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080" />
+  <title>台北兒童福利中心 - 資訊看板</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts 需要網路；離線時此行可移除，fallback 為系統字體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  主容器 (設計稿尺寸 1080 × 1920，以 scale 適配螢幕)         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="app-root">
+
+  <!-- ▌HEADER ──────────────────────────────────────────────── -->
+  <header class="header">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <!-- SVG inline logo（無網路可正常顯示） -->
+      <svg width="160" height="72" viewBox="0 0 160 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="160" height="72" rx="0" fill="none"/>
+        <!-- 簡化 logo 圖示 -->
+        <circle cx="24" cy="28" r="16" fill="#e84c8e" opacity=".85"/>
+        <circle cx="36" cy="20" r="10" fill="#f7c948" opacity=".9"/>
+        <text x="52" y="22" font-family="Noto Sans TC,sans-serif" font-size="12" font-weight="700" fill="#406c76">台北兒童</text>
+        <text x="52" y="38" font-family="Noto Sans TC,sans-serif" font-size="12" font-weight="700" fill="#406c76">福利中心</text>
+        <text x="8" y="62" font-family="Noto Sans TC,sans-serif" font-size="9" fill="#888">財團法人台北市兒童福利聯盟</text>
+      </svg>
+    </div>
+
+    <!-- 時鐘 -->
+    <div class="clock-pill">
+      <span class="clock-icon">
+        <!-- 時鐘 SVG icon -->
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="16" stroke="#333" stroke-width="2"/>
+          <line x1="18" y1="10" x2="18" y2="18" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="18" y1="18" x2="24" y2="22" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="2" fill="#333"/>
+        </svg>
+      </span>
+      <span id="clock-ampm" class="clock-ampm">上午</span>
+      <span id="clock-time" class="clock-time">10:00</span>
+      <span class="clock-sep">|</span>
+      <span id="clock-weekday" class="clock-weekday">星期四</span>
+      <span id="clock-date" class="clock-date">12/8</span>
+    </div>
+
+    <!-- 天氣 -->
+    <div class="weather-pill">
+      <!-- 天氣圖示 (SVG inline) -->
+      <span class="weather-icon">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="18" r="10" fill="#f7c948"/>
+          <ellipse cx="16" cy="30" rx="9" ry="6" fill="white" stroke="#ccc" stroke-width="1"/>
+          <ellipse cx="24" cy="32" rx="12" ry="7" fill="white" stroke="#ccc" stroke-width="1"/>
+        </svg>
+      </span>
+      <div class="weather-info">
+        <span id="weather-condition" class="weather-condition">晴時多雲</span>
+        <span id="weather-temp" class="weather-temp">25˚C</span>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ▌HERO 建築圖 ──────────────────────────────────────────── -->
+  <section class="hero-section">
+    <div class="hero-image-wrap">
+      <!-- 以漸層 + SVG city 圖形替代外部圖片，保證離線可顯示 -->
+      <div class="hero-city-art">
+        <svg width="1080" height="540" viewBox="0 0 1080 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#b8e4f7"/>
+              <stop offset="60%" stop-color="#d5eefb"/>
+              <stop offset="100%" stop-color="#e8f5fc"/>
+            </linearGradient>
+            <linearGradient id="mtGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a8c8a0"/>
+              <stop offset="100%" stop-color="#6a9e7a"/>
+            </linearGradient>
+          </defs>
+          <!-- 天空 -->
+          <rect width="1080" height="540" fill="url(#skyGrad)"/>
+          <!-- 山 -->
+          <polygon points="0,300 200,120 400,280 600,100 800,220 1080,80 1080,400 0,400" fill="url(#mtGrad)" opacity=".7"/>
+          <!-- 雲 -->
+          <ellipse cx="200" cy="80" rx="80" ry="35" fill="white" opacity=".85"/>
+          <ellipse cx="260" cy="70" rx="60" ry="28" fill="white" opacity=".9"/>
+          <ellipse cx="750" cy="60" rx="90" ry="32" fill="white" opacity=".8"/>
+          <ellipse cx="820" cy="50" rx="60" ry="25" fill="white" opacity=".85"/>
+          <!-- 建築群 -->
+          <rect x="80"  y="250" width="80"  height="220" fill="#c8d8e8" rx="4"/>
+          <rect x="100" y="200" width="40"  height="50"  fill="#b0c4d8" rx="2"/>
+          <rect x="180" y="220" width="100" height="250" fill="#d0e0ee" rx="4"/>
+          <rect x="300" y="160" width="70"  height="310" fill="#a8bcd0" rx="4"/>
+          <rect x="310" y="120" width="50"  height="45"  fill="#96aac0" rx="2"/>
+          <rect x="390" y="200" width="120" height="270" fill="#bccee0" rx="4"/>
+          <!-- 主建築 (帶植栽外牆) -->
+          <rect x="530" y="100" width="160" height="410" fill="#c4d8c4" rx="8"/>
+          <rect x="540" y="110" width="140" height="400" fill="#b8d4b0" rx="6"/>
+          <!-- 植栽陽台線條 -->
+          <rect x="540" y="150" width="140" height="4"  fill="#7ab87a" rx="2"/>
+          <rect x="540" y="210" width="140" height="4"  fill="#7ab87a" rx="2"/>
+          <rect x="540" y="270" width="140" height="4"  fill="#7ab87a" rx="2"/>
+          <rect x="540" y="330" width="140" height="4"  fill="#7ab87a" rx="2"/>
+          <rect x="540" y="390" width="140" height="4"  fill="#7ab87a" rx="2"/>
+          <!-- 右側建築 -->
+          <rect x="710" y="180" width="90"  height="290" fill="#d8e4f0" rx="4"/>
+          <rect x="820" y="240" width="110" height="230" fill="#cad8ea" rx="4"/>
+          <rect x="950" y="200" width="80"  height="270" fill="#b8cce0" rx="4"/>
+          <rect x="1000" y="150" width="80"  height="320" fill="#a8bcd4" rx="4"/>
+          <!-- 前景綠樹 -->
+          <circle cx="80"  cy="450" r="40" fill="#5a9e5a" opacity=".9"/>
+          <circle cx="160" cy="460" r="30" fill="#6aaa6a" opacity=".85"/>
+          <circle cx="900" cy="455" r="35" fill="#5a9e5a" opacity=".9"/>
+          <circle cx="980" cy="465" r="28" fill="#6aaa6a" opacity=".85"/>
+          <!-- 地面 -->
+          <rect x="0" y="480" width="1080" height="60" fill="#8ab88a" opacity=".6"/>
+        </svg>
+      </div>
+    </div>
+    <!-- 輪播指示點 -->
+    <div class="carousel-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+  <!-- ▌INFO CARDS 區域 ─────────────────────────────────────── -->
+  <main class="cards-area">
+
+    <!-- ── 環境監測卡 ──────────────────────────────── -->
+    <article class="card env-card">
+      <div class="card-icon-col">
+        <div class="card-icon">
+          <!-- 環境 icon (SVG) -->
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 8 C18 8 10 16 10 26 C10 34 14 40 20 44 L28 48 L36 44 C42 40 46 34 46 26 C46 16 38 8 28 8Z" fill="#b0d4c8" stroke="#406c76" stroke-width="2"/>
+            <path d="M28 16 C22 16 18 20 18 26 C18 30 20 33 23 35 L28 38 L33 35 C36 33 38 30 38 26 C38 20 34 16 28 16Z" fill="#406c76" opacity=".7"/>
+            <line x1="28" y1="26" x2="28" y2="16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <line x1="28" y1="26" x2="34" y2="30" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="card-label">環境</p>
+      </div>
+      <div class="card-content env-content">
+        <!-- 動態產生 by JS -->
+      </div>
+      <div class="card-arrow">›</div>
+    </article>
+
+    <!-- ── 公告卡 ───────────────────────────────────── -->
+    <article class="card notice-card">
+      <div class="card-icon-col">
+        <div class="card-icon">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="36" height="36" rx="4" fill="#b0d4c8" stroke="#406c76" stroke-width="2"/>
+            <line x1="18" y1="22" x2="38" y2="22" stroke="#406c76" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="18" y1="29" x2="38" y2="29" stroke="#406c76" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="18" y1="36" x2="30" y2="36" stroke="#406c76" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="card-label">公告</p>
+      </div>
+      <div class="card-content notice-content">
+        <!-- 動態產生 by JS -->
+      </div>
+      <div class="card-arrow">›</div>
+    </article>
+
+    <!-- ── 交通資訊卡 ─────────────────────────────────── -->
+    <article class="card transit-card">
+      <div class="card-icon-col">
+        <div class="card-icon">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="12" width="36" height="30" rx="6" fill="#b0d4c8" stroke="#406c76" stroke-width="2"/>
+            <rect x="14" y="16" width="28" height="16" rx="3" fill="white" opacity=".7"/>
+            <circle cx="17" cy="46" r="4" fill="#406c76"/>
+            <circle cx="39" cy="46" r="4" fill="#406c76"/>
+            <line x1="10" y1="36" x2="46" y2="36" stroke="#406c76" stroke-width="2"/>
+          </svg>
+        </div>
+        <p class="card-label">公車</p>
+      </div>
+      <div class="card-content transit-content">
+        <!-- 動態產生 by JS -->
+      </div>
+      <div class="card-arrow">›</div>
+    </article>
+
+    <!-- ── 園區導覽卡 ─────────────────────────────────── -->
+    <article class="card guide-card">
+      <div class="card-icon-col">
+        <div class="card-icon">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="8" width="28" height="36" rx="4" fill="#b0d4c8" stroke="#406c76" stroke-width="2"/>
+            <rect x="22" y="32" width="12" height="12" rx="2" fill="#406c76" opacity=".6"/>
+            <line x1="14" y1="22" x2="42" y2="22" stroke="#406c76" stroke-width="2"/>
+            <rect x="8"  y="20" width="6" height="24" rx="2" fill="#406c76" opacity=".35"/>
+            <rect x="42" y="20" width="6" height="24" rx="2" fill="#406c76" opacity=".35"/>
+          </svg>
+        </div>
+        <p class="card-label">導覽</p>
+      </div>
+      <div class="card-content guide-content">
+        <div class="floor-tabs" id="floor-tabs">
+          <!-- 動態產生 by JS -->
+        </div>
+        <div class="floor-detail" id="floor-detail">
+          <!-- 動態產生 by JS -->
+        </div>
+      </div>
+      <div class="card-arrow">›</div>
+    </article>
+
+  </main>
+</div><!-- /#app-root -->
+
+<script src="mock.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
