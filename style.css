@@ -543,6 +543,7 @@ html, body {
 .notice-ticker-wrap {
   overflow: hidden;
   width: 100%;
+  visibility: hidden;
 }
 
 .notice-ticker {
@@ -554,6 +555,7 @@ html, body {
 /* 交通輪播容器 */
 .transit-roller-wrap {
   overflow: hidden;
+  visibility: hidden;
 }
 
 #bus-roller,

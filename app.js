@@ -268,6 +268,7 @@
         var noticeIdx   = 0;
 
         noticeWrap.style.height = noticeItemH + 'px';
+        noticeWrap.style.visibility = 'visible';
 
         function noticeNext() {
           noticeIdx++;
@@ -312,6 +313,8 @@
         // 夾住視窗高度 = 2 列高 + 1 個間距
         busWrap.style.height   = (perPage * busRowH   + (perPage - 1) * gap) + 'px';
         ubikeWrap.style.height = (perPage * ubikeRowH + (perPage - 1) * gap) + 'px';
+        busWrap.style.visibility   = 'visible';
+        ubikeWrap.style.visibility = 'visible';
 
         var totalGroups = window.MOCK_DATA.bus.routes.length / perPage; // 6 / 2 = 3
         var groupIdx    = 0;
