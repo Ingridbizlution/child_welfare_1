@@ -94,6 +94,9 @@ html, body {
 /* Logo */
 .logo-wrap {
   flex: 0 0 auto;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 
 /* 時鐘 Pill */
