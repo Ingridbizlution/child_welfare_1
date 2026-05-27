@@ -85,6 +85,17 @@
       align-items: center;
       gap: 14px;
       padding: 0 18px 0 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      user-select: none;
+    }
+    .legend-item:hover {
+      background: #fff;
+      transform: scale(1.03);
+    }
+    .legend-item.active {
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.85), 0 4px 12px rgba(0,0,0,0.15);
     }
     .legend-num {
       width: 52px;
@@ -170,7 +181,7 @@
     <!-- 1F 平面圖 -->
     <div class="floor-card">
       <img class="floor-img"
-        src="images/完成版_幼兒教室.png"
+        src="images/classroom.png"
         alt="1F 平面圖 - 幼兒教室"
         onerror="this.style.display='none'; document.getElementById('fallback-map').style.display='block';"
       />
@@ -189,24 +200,24 @@
 
     <!-- 圖例 -->
     <div class="legend-grid">
-      <div class="legend-item"><div class="legend-num orange">1</div><span class="legend-label">幼兒教室</span></div>
-      <div class="legend-item"><div class="legend-num">2</div><span class="legend-label">廁所</span></div>
-      <div class="legend-item"><div class="legend-num">3</div><span class="legend-label">幼兒廁所</span></div>
-      <div class="legend-item"><div class="legend-num">4</div><span class="legend-label">親子廁所</span></div>
-      <div class="legend-item"><div class="legend-num">5</div><span class="legend-label">無障礙廁所</span></div>
-      <div class="legend-item"><div class="legend-num">6</div><span class="legend-label">會議室</span></div>
-      <div class="legend-item"><div class="legend-num">7</div><span class="legend-label">辦公室</span></div>
-      <div class="legend-item"><div class="legend-num">8</div><span class="legend-label">茶水間</span></div>
-      <div class="legend-item"><div class="legend-num">9</div><span class="legend-label">事務間</span></div>
-      <div class="legend-item"><div class="legend-num">10</div><span class="legend-label">哺乳室</span></div>
-      <div class="legend-item"><div class="legend-num">11</div><span class="legend-label">盥洗室</span></div>
-      <div class="legend-item"><div class="legend-num">12</div><span class="legend-label">健康中心</span></div>
-      <div class="legend-item"><div class="legend-num">13</div><span class="legend-label">警衛室</span></div>
-      <div class="legend-item"><div class="legend-num">14</div><span class="legend-label">服務櫃台</span></div>
-      <div class="legend-item"><div class="legend-num">15</div><span class="legend-label">門廳及等待區</span></div>
-      <div class="legend-item"><div class="legend-num">16</div><span class="legend-label">陽台</span></div>
-      <div class="legend-item"><div class="legend-num">17</div><span class="legend-label">電梯廳</span></div>
-      <div class="legend-item"><div class="legend-num">18</div><span class="legend-label">機電設備空間</span></div>
+      <div class="legend-item active" data-img="images/classroom.png"><div class="legend-num orange">1</div><span class="legend-label">幼兒教室</span></div>
+      <div class="legend-item" data-img="images/toilet.png"><div class="legend-num">2</div><span class="legend-label">廁所</span></div>
+      <div class="legend-item" data-img="images/child_toilet.png"><div class="legend-num">3</div><span class="legend-label">幼兒廁所</span></div>
+      <div class="legend-item" data-img="images/family_toilet.png"><div class="legend-num">4</div><span class="legend-label">親子廁所</span></div>
+      <div class="legend-item" data-img="images/accessible_toilet.png"><div class="legend-num">5</div><span class="legend-label">無障礙廁所</span></div>
+      <div class="legend-item" data-img="images/conference.png"><div class="legend-num">6</div><span class="legend-label">會議室</span></div>
+      <div class="legend-item" data-img="images/office.png"><div class="legend-num">7</div><span class="legend-label">辦公室</span></div>
+      <div class="legend-item" data-img="images/tea_room.png"><div class="legend-num">8</div><span class="legend-label">茶水間</span></div>
+      <div class="legend-item" data-img="images/business_room.png"><div class="legend-num">9</div><span class="legend-label">事務間</span></div>
+      <div class="legend-item" data-img="images/nursing_room.png"><div class="legend-num">10</div><span class="legend-label">哺乳室</span></div>
+      <div class="legend-item" data-img="images/bathroom.png"><div class="legend-num">11</div><span class="legend-label">盥洗室</span></div>
+      <div class="legend-item" data-img="images/health_center.png"><div class="legend-num">12</div><span class="legend-label">健康中心</span></div>
+      <div class="legend-item" data-img="images/guard_room.png"><div class="legend-num">13</div><span class="legend-label">警衛室</span></div>
+      <div class="legend-item" data-img="images/service_center.png"><div class="legend-num">14</div><span class="legend-label">服務櫃台</span></div>
+      <div class="legend-item" data-img="images/waiting_area.png"><div class="legend-num">15</div><span class="legend-label">門廳及等待區</span></div>
+      <div class="legend-item" data-img="images/balcony.png"><div class="legend-num">16</div><span class="legend-label">陽台</span></div>
+      <div class="legend-item" data-img="images/elevator.png"><div class="legend-num">17</div><span class="legend-label">電梯廳</span></div>
+      <div class="legend-item" data-img="images/machine_room.png"><div class="legend-num">18</div><span class="legend-label">機電設備空間</span></div>
     </div>
 
   </main>
@@ -246,6 +257,29 @@
     var w = window.MOCK_DATA.weather;
     document.getElementById('weather-condition').textContent = w.condition;
     document.getElementById('weather-temp').textContent      = w.temperature + '˚C';
+
+    // 點擊圖例切換上方平面圖
+    var floorImg = document.querySelector('.floor-img');
+    var fallback = document.getElementById('fallback-map');
+    var legendItems = document.querySelectorAll('.legend-item');
+    legendItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var img = item.getAttribute('data-img');
+        if (!img) return;
+        legendItems.forEach(function (el) {
+          el.classList.remove('active');
+          var n = el.querySelector('.legend-num');
+          if (n) n.classList.remove('orange');
+        });
+        item.classList.add('active');
+        var num = item.querySelector('.legend-num');
+        if (num) num.classList.add('orange');
+        if (fallback) fallback.style.display = 'none';
+        floorImg.style.display = 'block';
+        floorImg.src = img;
+        floorImg.alt = item.querySelector('.legend-label').textContent;
+      });
+    });
   })();
 </script>
 </body>
