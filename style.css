@@ -368,18 +368,9 @@ html, body {
 /* ══════════════════════════════════════════════════════════════
    交通資訊卡
    ══════════════════════════════════════════════════════════════ */
+/* 公車內容區（bus 區塊的 card-content） */
 .transit-content {
-  flex-direction: row;
-  align-items: center;
-  gap: 0;
-}
-
-.transit-bus-col {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-right: 32px;
+  padding-right: 24px;
   border-right: 1.5px solid rgba(64,108,118,0.2);
 }
 
@@ -409,26 +400,20 @@ html, body {
 .bus-status.arriving { color: var(--c-arriving); border: 1px solid rgba(232,76,61,.3); }
 .bus-status.soon     { color: var(--c-soon);     border: 1px solid rgba(243,156,18,.3); }
 
+/* Ubike 圖示欄（與 card-icon-col 同層級、樣式對齊） */
 .transit-ubike-col {
-  flex: 1;
+  flex: 0 0 90px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-left: 32px;
-}
-
-.ubike-header {
-  display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
+  gap: 8px;
 }
 
-.ubike-label {
-  font-family: var(--font-en);
-  font-size: 28px;
-  color: var(--c-text-main);
-  font-weight: 400;
+/* Ubike 內容（輪播容器作為 .card 的直接子元素，需自行撐開 flex 空間） */
+.transit-card > .transit-roller-wrap {
+  flex: 1;
+  min-width: 0;
+  padding-right: 40px;
 }
 
 .ubike-row {
@@ -452,12 +437,6 @@ html, body {
   border-radius: var(--r-badge);
   background: rgba(255,255,255,0.5);
   white-space: nowrap;
-}
-
-/* Ubike SVG icon inline */
-.ubike-icon svg {
-  width: 36px;
-  height: 28px;
 }
 
 /* ══════════════════════════════════════════════════════════════

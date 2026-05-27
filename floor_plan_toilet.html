@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080" />
+  <title>台北兒童福利中心 - 1F 平面圖</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* floor_plan 專屬樣式（設計稿尺寸基準：1080 × 1920） */
+    .floor-plan-main {
+      position: absolute;
+      top: 160px;
+      left: 40px;
+      right: 40px;
+      bottom: 40px;
+    }
+
+    /* ── 1F 平面圖卡片 ── */
+    .floor-card {
+      width: 100%;
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .floor-card img.floor-img {
+      width: 100%;
+      display: block;
+    }
+    .fallback-map {
+      padding: 80px 40px;
+      text-align: center;
+      color: #215db6;
+      font-size: 32px;
+    }
+    .fallback-map .hint {
+      margin-top: 16px;
+      font-size: 20px;
+      color: #888;
+    }
+
+    /* ── 樓層切換按鈕 ── */
+    .floor-buttons {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .floor-btn-link {
+      background: var(--c-blue-btn);
+      border: 2px solid rgba(255,255,255,0.85);
+      border-radius: 40px;
+      color: #fff;
+      font-size: 36px;
+      font-weight: 600;
+      width: 180px;
+      height: 80px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .floor-btn-link:hover { background: #2a54a0; transform: scale(1.04); }
+    .floor-btn-link.active {
+      background: #1e3f80;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.6);
+    }
+
+    /* ── 圖例 ── */
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .legend-item {
+      background: rgba(255,255,255,0.85);
+      border-radius: 36px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 18px 0 8px;
+    }
+    .legend-num {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--c-blue-btn);
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--font-en);
+    }
+    .legend-num.orange { background: #f5a55a; }
+    .legend-label {
+      font-size: 20px;
+      color: #4b4b4b;
+      font-family: var(--font-zh);
+    }
+
+    /* Logo 連結 */
+    .logo-wrap {
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  主容器 (設計稿尺寸 1080 × 1920，以 scale 適配螢幕)         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="app-root">
+
+  <!-- ▌HEADER ──────────────────────────────────────────────── -->
+  <header class="header">
+
+    <!-- Logo (點擊回到首頁) -->
+    <a class="logo-wrap" href="index.html">
+      <img src="images/logo.png" alt="台北兒童福利中心">
+    </a>
+
+    <!-- 時鐘 -->
+    <div class="clock-pill">
+      <span class="clock-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="16" stroke="#333" stroke-width="2"/>
+          <line x1="18" y1="10" x2="18" y2="18" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="18" y1="18" x2="24" y2="22" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="2" fill="#333"/>
+        </svg>
+      </span>
+      <span id="clock-ampm" class="clock-ampm">上午</span>
+      <span id="clock-time" class="clock-time">10:00</span>
+      <span class="clock-sep">|</span>
+      <span id="clock-weekday" class="clock-weekday">星期四</span>
+      <span id="clock-date" class="clock-date">12/8</span>
+    </div>
+
+    <!-- 天氣 -->
+    <div class="weather-pill">
+      <span class="weather-icon">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="18" r="10" fill="#f7c948"/>
+          <ellipse cx="16" cy="30" rx="9" ry="6" fill="white" stroke="#ccc" stroke-width="1"/>
+          <ellipse cx="24" cy="32" rx="12" ry="7" fill="white" stroke="#ccc" stroke-width="1"/>
+        </svg>
+      </span>
+      <div class="weather-info">
+        <span id="weather-condition" class="weather-condition">晴時多雲</span>
+        <span id="weather-temp" class="weather-temp">25˚C</span>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ▌主內容區 ─────────────────────────────────────────── -->
+  <main class="floor-plan-main">
+
+    <!-- 1F 平面圖 -->
+    <div class="floor-card">
+      <img class="floor-img"
+        src="images/完成版_廁所.png"
+        alt="1F 平面圖 - 幼兒教室"
+        onerror="this.style.display='none'; document.getElementById('fallback-map').style.display='block';"
+      />
+      <div id="fallback-map" class="fallback-map" style="display:none;">
+        <p>🗺️ 1F 平面圖</p>
+        <p class="hint">找不到圖片：images/完成版_幼兒教室.png</p>
+      </div>
+    </div>
+
+    <!-- 樓層切換 -->
+    <div class="floor-buttons">
+      <a href="floor_plan.html" class="floor-btn-link active">1F</a>
+      <a href="#" class="floor-btn-link" onclick="alert('2F 平面圖尚未建立'); return false;">2F</a>
+      <a href="#" class="floor-btn-link" onclick="alert('3F 平面圖尚未建立'); return false;">3F</a>
+    </div>
+
+    <!-- 圖例 -->
+    <div class="legend-grid">
+      <div class="legend-item"><div class="legend-num">1</div><span class="legend-label">幼兒教室</span></div>
+      <div class="legend-item"><div class="legend-num orange">2</div><span class="legend-label">廁所</span></div>
+      <div class="legend-item"><div class="legend-num">3</div><span class="legend-label">幼兒廁所</span></div>
+      <div class="legend-item"><div class="legend-num">4</div><span class="legend-label">親子廁所</span></div>
+      <div class="legend-item"><div class="legend-num">5</div><span class="legend-label">無障礙廁所</span></div>
+      <div class="legend-item"><div class="legend-num">6</div><span class="legend-label">會議室</span></div>
+      <div class="legend-item"><div class="legend-num">7</div><span class="legend-label">辦公室</span></div>
+      <div class="legend-item"><div class="legend-num">8</div><span class="legend-label">茶水間</span></div>
+      <div class="legend-item"><div class="legend-num">9</div><span class="legend-label">事務間</span></div>
+      <div class="legend-item"><div class="legend-num">10</div><span class="legend-label">哺乳室</span></div>
+      <div class="legend-item"><div class="legend-num">11</div><span class="legend-label">盥洗室</span></div>
+      <div class="legend-item"><div class="legend-num">12</div><span class="legend-label">健康中心</span></div>
+      <div class="legend-item"><div class="legend-num">13</div><span class="legend-label">警衛室</span></div>
+      <div class="legend-item"><div class="legend-num">14</div><span class="legend-label">服務櫃台</span></div>
+      <div class="legend-item"><div class="legend-num">15</div><span class="legend-label">門廳及等待區</span></div>
+      <div class="legend-item"><div class="legend-num">16</div><span class="legend-label">陽台</span></div>
+      <div class="legend-item"><div class="legend-num">17</div><span class="legend-label">電梯廳</span></div>
+      <div class="legend-item"><div class="legend-num">18</div><span class="legend-label">機電設備空間</span></div>
+    </div>
+
+  </main>
+
+</div><!-- /#app-root -->
+
+<script src="mock.js"></script>
+<script>
+  // 沿用 app.js 的縮放 + 時鐘 + 天氣邏輯
+  (function () {
+    'use strict';
+    var DESIGN_W = 1080, DESIGN_H = 1920;
+
+    function scaleApp() {
+      var root = document.getElementById('app-root');
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+      var scale = Math.min(vw / DESIGN_W, vh / DESIGN_H);
+      var offsetX = Math.max(0, (vw - DESIGN_W * scale) / 2);
+      var offsetY = Math.max(0, (vh - DESIGN_H * scale) / 2);
+      root.style.transform = 'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(' + scale + ')';
+      document.body.style.background = '#1a2a30';
+    }
+    window.addEventListener('resize', scaleApp);
+    scaleApp();
+
+    function updateClock() {
+      var t = window.getMockTime();
+      document.getElementById('clock-ampm').textContent    = t.ampm;
+      document.getElementById('clock-time').textContent    = t.time;
+      document.getElementById('clock-weekday').textContent = t.weekday;
+      document.getElementById('clock-date').textContent    = t.date;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    var w = window.MOCK_DATA.weather;
+    document.getElementById('weather-condition').textContent = w.condition;
+    document.getElementById('weather-temp').textContent      = w.temperature + '˚C';
+  })();
+</script>
+</body>
+</html>
