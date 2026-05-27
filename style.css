@@ -12,7 +12,8 @@
 :root {
   /* 顏色 */
   --c-primary:   #406c76;
-  --c-bg-grad-top:    rgb(226, 213, 210);
+  /* --c-bg-grad-top:    rgb(226, 213, 210); */
+  --c-bg-grad-top:    rgb(215, 255, 255);
   --c-bg-grad-mid:    rgb(100, 232, 231);
   --c-bg-grad-bot:    rgb(86, 144, 217);
   --c-card-bg:        rgba(255,255,255,0.6);
@@ -67,7 +68,7 @@ html, body {
   /* 背景漸層 */
   background: linear-gradient(
     179.57deg,
-    var(--c-bg-grad-top)  8.4%,
+    var(--c-bg-grad-top)  8.2%,
     var(--c-bg-grad-mid) 45.7%,
     var(--c-bg-grad-bot) 99.8%
   );
