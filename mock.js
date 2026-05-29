@@ -41,12 +41,12 @@ window.MOCK_DATA = {
   // ── 交通資訊 ─────────────────────────────────────────────────
   bus: {
     routes: [
-      { routeNo: "46號",  status: "即將進站",    statusClass: "arriving" },
-      { routeNo: "20號",  status: "2分鐘後進站", statusClass: "soon"     },
-      { routeNo: "311號", status: "進站中",       statusClass: "arriving" },
-      { routeNo: "72號",  status: "5分鐘後進站", statusClass: "soon"     },
-      { routeNo: "299號", status: "4分鐘後進站", statusClass: "soon"     },
-      { routeNo: "0南號", status: "即將進站",    statusClass: "arriving" }
+      { routeNo: "46號",  destination: "捷運市政府站", status: "即將進站",    statusClass: "arriving" },
+      { routeNo: "20號",  destination: "東園",         status: "2分鐘後進站", statusClass: "soon"     },
+      { routeNo: "311號", destination: "松德站",       status: "進站中",       statusClass: "arriving" },
+      { routeNo: "72號",  destination: "民生社區",     status: "5分鐘後進站", statusClass: "soon"     },
+      { routeNo: "299號", destination: "板橋",         status: "4分鐘後進站", statusClass: "soon"     },
+      { routeNo: "0南號", destination: "臺北車站",     status: "即將進站",    statusClass: "arriving" }
     ]
   },
 

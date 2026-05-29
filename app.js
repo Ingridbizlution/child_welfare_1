@@ -131,34 +131,53 @@
   // ══════════════════════════════════════════════════════════════
   //  交通資訊 (由下往上輪播，每次顯示 2 筆，停留 3 秒)
   // ══════════════════════════════════════════════════════════════
-  function renderTransit() {
+
+  // 版本號：每次更新資料時遞增，讓舊的動畫回呼自動停止
+  var _transitVer = 0;
+
+  // busRoutes   : [{ routeNo, destination, status, statusClass }]  (null = 保留現有)
+  // ubikeStations: [{ name, available }]
+  function renderTransit(busRoutes, ubikeStations) {
     var busRoller   = document.getElementById('bus-roller');
     var ubikeRoller = document.getElementById('ubike-roller');
     if (!busRoller || !ubikeRoller) return;
 
-    var busData   = window.MOCK_DATA.bus;
-    var ubikeData = window.MOCK_DATA.ubike;
+    // 若未傳入則使用 mock 資料
+    if (!busRoutes)    busRoutes    = window.MOCK_DATA.bus.routes;
+    if (!ubikeStations) ubikeStations = window.MOCK_DATA.ubike.stations;
 
-    // 公車：6 筆 + 頭 2 筆複製，讓最後捲回無縫
-    var busRoutes = busData.routes;
-    var busAll    = busRoutes.concat(busRoutes.slice(0, 2));
+    var perPage = 2;
+
+    // 公車：末尾補頭 perPage 筆，捲回時無縫
+    var busAll = busRoutes.concat(busRoutes.slice(0, perPage));
     busRoller.innerHTML = busAll.map(function (r) {
+      var destHtml = r.destination
+        ? '<span class="bus-dest">往 ' + r.destination + '</span>'
+        : '<span class="bus-dest"></span>';
       return '<div class="transit-bus-row">' +
-        '<span class="bus-route-no">' + r.routeNo + '</span>' +
-        '<span class="bus-status ' + r.statusClass + '">' + r.status + '</span>' +
+        '<span class="bus-route-no">'                          + r.routeNo    + '</span>' +
+        destHtml +
+        '<span class="bus-status ' + (r.statusClass || '') + '">' + r.status + '</span>' +
       '</div>';
     }).join('');
 
-    // Ubike：6 筆 + 頭 2 筆複製
-    var stations = ubikeData.stations;
-    var ubikeAll = stations.concat(stations.slice(0, 2));
+    // YouBike：同上
+    var ubikeAll = ubikeStations.concat(ubikeStations.slice(0, perPage));
     ubikeRoller.innerHTML = ubikeAll.map(function (s) {
       return '<div class="ubike-row">' +
-        '<span class="ubike-station">' + s.name + '</span>' +
-        '<span class="ubike-count">' + s.available + '</span>' +
+        '<span class="ubike-station">' + s.name      + '</span>' +
+        '<span class="ubike-count">'   + s.available + '</span>' +
       '</div>';
     }).join('');
   }
+
+  // 供 tdx.js 呼叫：更新資料並重啟動畫
+  window.updateTransitDisplay = function (busRoutes, ubikeStations) {
+    renderTransit(busRoutes, ubikeStations);
+    _transitVer++;
+    // 等新 DOM 排版完成後重新量測高度
+    setTimeout(function () { initTransitScrollers(_transitVer); }, 100);
+  };
 
   renderTransit();
 
@@ -253,61 +272,105 @@
       }
     }
 
-    // ── 交通：一次顯示 2 筆 ──────────────────────────────────
+  }
+
+  // ── 交通捲動器（可重複呼叫；版本號確保舊回呼自動失效）──────
+  function initTransitScrollers(version) {
     var busRoller   = document.getElementById('bus-roller');
     var ubikeRoller = document.getElementById('ubike-roller');
     var busWrap     = document.getElementById('bus-roller-wrap');
     var ubikeWrap   = document.getElementById('ubike-roller-wrap');
+    if (!busRoller || !ubikeRoller || !busWrap || !ubikeWrap) return;
 
-    if (busRoller && ubikeRoller && busWrap && ubikeWrap) {
-      var busRows   = busRoller.querySelectorAll('.transit-bus-row');
-      var ubikeRows = ubikeRoller.querySelectorAll('.ubike-row');
+    // 重置位移
+    busRoller.style.transition   = 'none';
+    ubikeRoller.style.transition = 'none';
+    busRoller.style.transform    = 'translateY(0)';
+    ubikeRoller.style.transform  = 'translateY(0)';
 
-      if (busRows.length >= 2 && ubikeRows.length >= 2) {
-        var perPage = 2;
-        var gap     = 8;
+    var perPage  = 2;
+    var gap      = 8;
 
-        var busRowH    = busRows[0].offsetHeight;
-        var ubikeRowH  = ubikeRows[0].offsetHeight;
-        var busSlotH   = busRowH   + gap;
-        var ubikeSlotH = ubikeRowH + gap;
-        var busPageH   = perPage * busSlotH;
-        var ubikePageH = perPage * ubikeSlotH;
+    // ── 公車捲動 ────────────────────────────────────────────
+    (function () {
+      var rows = busRoller.querySelectorAll('.transit-bus-row');
+      if (rows.length < perPage + 1) return;
 
-        // 夾住視窗高度 = 2 列高 + 1 個間距
-        busWrap.style.height   = (perPage * busRowH   + (perPage - 1) * gap) + 'px';
-        ubikeWrap.style.height = (perPage * ubikeRowH + (perPage - 1) * gap) + 'px';
-        busWrap.style.visibility   = 'visible';
-        ubikeWrap.style.visibility = 'visible';
+      var rowH       = rows[0].offsetHeight;
+      var slotH      = rowH + gap;
+      var pageH      = perPage * slotH;
+      var dataRows   = rows.length - perPage; // 去掉末尾複製的 perPage 筆
+      var totalPages = Math.ceil(dataRows / perPage);
 
-        var totalGroups = window.MOCK_DATA.bus.routes.length / perPage; // 6 / 2 = 3
-        var groupIdx    = 0;
+      busWrap.style.height     = (perPage * rowH + (perPage - 1) * gap) + 'px';
+      busWrap.style.visibility = 'visible';
 
-        function transitNext() {
-          groupIdx++;
-          busRoller.style.transition   = 'transform 0.4s ease';
-          ubikeRoller.style.transition = 'transform 0.4s ease';
-          busRoller.style.transform    = 'translateY(-' + (groupIdx * busPageH)   + 'px)';
-          ubikeRoller.style.transform  = 'translateY(-' + (groupIdx * ubikePageH) + 'px)';
-
-          setTimeout(function () {
-            if (groupIdx >= totalGroups) {
-              busRoller.style.transition   = 'none';
-              ubikeRoller.style.transition = 'none';
-              busRoller.style.transform    = 'translateY(0)';
-              ubikeRoller.style.transform  = 'translateY(0)';
-              groupIdx = 0;
-            }
-            setTimeout(transitNext, 3000);
-          }, 400);
-        }
-
-        setTimeout(transitNext, 3000);
+      var pageIdx = 0;
+      function next() {
+        if (_transitVer !== version) return;
+        pageIdx++;
+        busRoller.style.transition = 'transform 0.4s ease';
+        busRoller.style.transform  = 'translateY(-' + (pageIdx * pageH) + 'px)';
+        setTimeout(function () {
+          if (_transitVer !== version) return;
+          if (pageIdx >= totalPages) {
+            busRoller.style.transition = 'none';
+            busRoller.style.transform  = 'translateY(0)';
+            pageIdx = 0;
+          }
+          setTimeout(next, 3000);
+        }, 400);
       }
-    }
+      setTimeout(next, 3000);
+    }());
+
+    // ── YouBike 捲動 ─────────────────────────────────────────
+    (function () {
+      var rows = ubikeRoller.querySelectorAll('.ubike-row');
+      if (rows.length < perPage + 1) {
+        // 資料不足兩頁時，僅顯示不捲動
+        if (rows.length >= 1) {
+          var rowH = rows[0].offsetHeight;
+          ubikeWrap.style.height     = (perPage * rowH + (perPage - 1) * gap) + 'px';
+          ubikeWrap.style.visibility = 'visible';
+        }
+        return;
+      }
+
+      var rowH       = rows[0].offsetHeight;
+      var slotH      = rowH + gap;
+      var pageH      = perPage * slotH;
+      var dataRows   = rows.length - perPage;
+      var totalPages = Math.ceil(dataRows / perPage);
+
+      ubikeWrap.style.height     = (perPage * rowH + (perPage - 1) * gap) + 'px';
+      ubikeWrap.style.visibility = 'visible';
+
+      var pageIdx = 0;
+      function next() {
+        if (_transitVer !== version) return;
+        pageIdx++;
+        ubikeRoller.style.transition = 'transform 0.4s ease';
+        ubikeRoller.style.transform  = 'translateY(-' + (pageIdx * pageH) + 'px)';
+        setTimeout(function () {
+          if (_transitVer !== version) return;
+          if (pageIdx >= totalPages) {
+            ubikeRoller.style.transition = 'none';
+            ubikeRoller.style.transform  = 'translateY(0)';
+            pageIdx = 0;
+          }
+          setTimeout(next, 3000);
+        }, 400);
+      }
+      setTimeout(next, 3000);
+    }());
   }
 
   // 等字體與排版完成後才讀取高度
-  setTimeout(initScrollers, 1000);
+  setTimeout(function () {
+    initScrollers();
+    _transitVer++;
+    initTransitScrollers(_transitVer);
+  }, 1000);
 
 })();

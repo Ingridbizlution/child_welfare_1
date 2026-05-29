@@ -389,6 +389,17 @@ html, body {
   flex-shrink: 0;
 }
 
+.bus-dest {
+  font-family: var(--font-zh);
+  font-size: 20px;
+  color: var(--c-text-sub, #6a8a92);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .bus-status {
   font-family: var(--font-zh);
   font-size: 20px;
