@@ -88,6 +88,7 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
       user-select: none;
+      touch-action: manipulation;
     }
     .legend-item:hover {
       background: #fff;
@@ -263,7 +264,8 @@
     var fallback = document.getElementById('fallback-map');
     var legendItems = document.querySelectorAll('.legend-item');
     legendItems.forEach(function (item) {
-      item.addEventListener('click', function () {
+      function activate(e) {
+        if (e && e.type === 'touchend') e.preventDefault();
         var img = item.getAttribute('data-img');
         if (!img) return;
         legendItems.forEach(function (el) {
@@ -278,7 +280,9 @@
         floorImg.style.display = 'block';
         floorImg.src = img;
         floorImg.alt = item.querySelector('.legend-label').textContent;
-      });
+      }
+      item.addEventListener('click', activate);
+      item.addEventListener('touchend', activate);
     });
   })();
 </script>
