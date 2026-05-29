@@ -196,44 +196,70 @@
   }
 
   // ── YouBike ───────────────────────────────────────────────────
+  // Availability 端點沒有 StationName 欄位，需先用 Station 端點查站名 -> StationUID，
+  // 再用 StationUID 去 filter Availability。
   function fetchUbike() {
-    var filterParts = UBIKE_STATIONS.map(function (s) {
+    var nameFilter = UBIKE_STATIONS.map(function (s) {
       return "StationName/Zh_tw eq '" + s + "'";
-    });
-    var filter = filterParts.join(' or ');
+    }).join(' or ');
 
-    // var url = API_BASE + '/Bike/Availability/City/Taipei' +
-    //   '?$filter=' + encodeURIComponent(filter) +
-    //   '&$select=StationName,AvailableRentBikes' +
-    //   '&$format=JSON';
-
-    var url = API_BASE + '/Bike/Availability/City/Taipei' +
-      '?$filter=' + encodeURIComponent(filter);
-
-    console.log(url);
+    // 步驟一：用站名查 Station（這個端點才有 StationName / StationUID）
+    var stationUrl = API_BASE + '/Bike/Station/City/Taipei' +
+      '?$filter=' + encodeURIComponent(nameFilter);
 
     return getToken().then(function (token) {
-      return fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('YouBike API 失敗: ' + res.status);
-        return res.json();
-      })
-      .then(function (data) {
-        // 依照 UBIKE_STATIONS 順序排列
-        var map = {};
-        data.forEach(function (s) {
-          var name = s.StationName && s.StationName.Zh_tw ? s.StationName.Zh_tw : '';
-          if (name) map[name] = s.AvailableRentBikes || 0;
-        });
+      var auth = { headers: { 'Authorization': 'Bearer ' + token } };
 
-        return UBIKE_STATIONS.map(function (name) {
-          return {
-            name: name,
-            available: (map[name] !== undefined ? map[name] : '--') + '台'
-          };
+      return fetch(stationUrl, auth)
+        .then(function (res) {
+          if (!res.ok) throw new Error('YouBike 站點 API 失敗: ' + res.status);
+          return res.json();
+        })
+        .then(function (stations) {
+          // 建立 StationUID -> 站名 對照
+          var uidToName = {};
+          stations.forEach(function (st) {
+            var name = st.StationName && st.StationName.Zh_tw ? st.StationName.Zh_tw : '';
+            if (name) uidToName[st.StationUID] = name;
+          });
+
+          var uids = Object.keys(uidToName);
+          if (!uids.length) {
+            return UBIKE_STATIONS.map(function (name) {
+              return { name: name, available: '--台' };
+            });
+          }
+
+          // 步驟二：用 StationUID 查 Availability（這個端點只有 UID，沒有站名）
+          var availFilter = uids.map(function (u) {
+            return "StationUID eq '" + u + "'";
+          }).join(' or ');
+
+          var availUrl = API_BASE + '/Bike/Availability/City/Taipei' +
+            '?$filter=' + encodeURIComponent(availFilter);
+
+          return fetch(availUrl, auth)
+            .then(function (res) {
+              if (!res.ok) throw new Error('YouBike 可借 API 失敗: ' + res.status);
+              return res.json();
+            })
+            .then(function (data) {
+              var map = {};
+              data.forEach(function (s) {
+                var name = uidToName[s.StationUID];
+                if (name) map[name] = s.AvailableRentBikes || 0;
+              });
+
+              // 依照 UBIKE_STATIONS 順序排列
+              return UBIKE_STATIONS.map(function (name) {
+                return {
+                  name: name,
+                  available: (map[name] !== undefined ? map[name] : '--') + '台'
+                };
+              });
+            });
         });
-      });
+    });
   }
 
   // ── 更新顯示 ──────────────────────────────────────────────────
